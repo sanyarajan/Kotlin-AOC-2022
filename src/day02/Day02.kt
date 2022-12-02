@@ -34,7 +34,7 @@ enum class CodeOptions {
     }
 }
 
-enum class DesiredOutcome() {
+enum class DesiredOutcome {
     WIN, LOSE, DRAW;
 
     companion object {
@@ -51,9 +51,9 @@ enum class DesiredOutcome() {
 
 class RPSValues {
     companion object {
-        var rock = 1
-        var paper = 2
-        var scissors = 3
+        private var rock = 1
+        private var paper = 2
+        private var scissors = 3
         fun getValue(playerOption: RPSOptions): Int {
             return when (playerOption) {
                 RPSOptions.ROCK -> rock
@@ -78,9 +78,7 @@ fun main() {
                     3 + RPSValues.getValue(playerOption)
                 }
 
-                (opponentOption == RPSOptions.ROCK && playerOption == RPSOptions.SCISSORS) ||
-                        (opponentOption == RPSOptions.PAPER && playerOption == RPSOptions.ROCK) ||
-                        (opponentOption == RPSOptions.SCISSORS && playerOption == RPSOptions.PAPER) -> {
+                (opponentOption == RPSOptions.ROCK && playerOption == RPSOptions.SCISSORS) || (opponentOption == RPSOptions.PAPER && playerOption == RPSOptions.ROCK) || (opponentOption == RPSOptions.SCISSORS && playerOption == RPSOptions.PAPER) -> {
                     RPSValues.getValue(playerOption)
                 }
 
