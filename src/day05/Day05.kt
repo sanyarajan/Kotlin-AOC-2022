@@ -5,58 +5,9 @@ import kotlin.math.ceil
 
 
 fun main() {
-    fun part1(input: List<String>): String {
-        var topCrates = ""
-        val numStacks = ceil(input[0].length / 4.0).toInt()
-        //parse a string like the following into a set of stacks
-        //    [D]
-        //[N] [C]
-        //[Z] [M] [P] [X]
-        //01234567891111
-        //          0123
-        // 1   2   3   4
+    val instructionsRegex = Regex("move ([0-9]+) from ([0-9]+) to ([0-9]+)")
 
-        // list of length numStacks of stacks of chars
-        val stacks = List(numStacks) { ArrayDeque<Char>() }
-        var stackLines = 0
-        run loop@{
-            input.forEachIndexed { index, line ->
-                if (line[1] == '1') {
-                 stackLines = index
-                    return@loop
-                }
-                for (i in 1 until numStacks * 4 - 1 step 4) {
-                    if (line[i] != ' ')
-                        stacks[(i - 1) / 4].addFirst(line[i])
-                }
-            }
-        }
-        println(stacks)
-        val instructions = input.subList(stackLines + 2, input.size)
-        val instructionsRegex = Regex("move ([0-9]+) from ([0-9]+) to ([0-9]+)")
-        instructions.forEach { instruction ->
-            val (numCrates, fromStack, toStack) = instructionsRegex.find(instruction)!!.destructured
-            val numCratesInt = numCrates.toInt()
-            val fromStackInt = fromStack.toInt()
-            val toStackInt = toStack.toInt()
-            //move crates from fromStack to toStack
-            for (i in 0 until numCratesInt) {
-                stacks[toStackInt-1].addLast(stacks[fromStackInt-1].removeLast())
-            }
-//            println(instruction)
-//            println(stacks)
-        }
-
-       // get the last crate from each stack
-        stacks.forEach { stack ->
-            topCrates += stack.last()
-        }
-
-        return topCrates
-    }
-
-    fun part2(input: List<String>): String {
-        var topCrates = ""
+    fun parseInput(input: List<String>): Pair<List<ArrayDeque<Char>>, List<String>> {
         val numStacks = ceil(input[0].length / 4.0).toInt()
 
         // list of length numStacks of stacks of chars
@@ -74,9 +25,38 @@ fun main() {
                 }
             }
         }
-        println(stacks)
+
         val instructions = input.subList(stackLines + 2, input.size)
-        val instructionsRegex = Regex("move ([0-9]+) from ([0-9]+) to ([0-9]+)")
+        return Pair(stacks, instructions)
+    }
+
+    fun part1(input: List<String>): String {
+        var topCrates = ""
+        val (stacks, instructions) = parseInput(input)
+
+        instructions.forEach { instruction ->
+            val (numCrates, fromStack, toStack) = instructionsRegex.find(instruction)!!.destructured
+            val numCratesInt = numCrates.toInt()
+            val fromStackInt = fromStack.toInt()
+            val toStackInt = toStack.toInt()
+            //move crates from fromStack to toStack
+            for (i in 0 until numCratesInt) {
+                stacks[toStackInt-1].addLast(stacks[fromStackInt-1].removeLast())
+            }
+        }
+
+       // get the last crate from each stack
+        stacks.forEach { stack ->
+            topCrates += stack.last()
+        }
+
+        return topCrates
+    }
+
+    fun part2(input: List<String>): String {
+        var topCrates = ""
+        val (stacks, instructions) = parseInput(input)
+
         instructions.forEach { instruction ->
             val (numCrates, fromStack, toStack) = instructionsRegex.find(instruction)!!.destructured
             val numCratesInt = numCrates.toInt()
@@ -91,9 +71,6 @@ fun main() {
                 stacks[toStackInt-1].addLast(cratesToMove.removeLast())
             }
 
-
-//            println(instruction)
-//            println(stacks)
         }
 
         // get the last crate from each stack
