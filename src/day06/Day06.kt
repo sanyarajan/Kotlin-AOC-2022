@@ -7,17 +7,17 @@ fun main() {
 
 
     fun findDistinctSequenceOfLength(input: String, sequenceLength:Int): Int {
-        var length = 0
+
         (0..input.length - sequenceLength).forEach { i ->
             val sub = input.subSequence(i, i + sequenceLength)
             val set = sub.toSet()
             if (set.size == sequenceLength) {
 
-                length = i + sequenceLength
-                return length
+                return i + sequenceLength
+
             }
         }
-        return length
+        return 0
     }
 
     fun part1(input: String): Int {
