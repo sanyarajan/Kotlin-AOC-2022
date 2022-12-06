@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection")
+
 package day06
 
 import readInputText
